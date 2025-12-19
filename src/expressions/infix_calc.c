@@ -46,12 +46,17 @@ static void apply_ap(stack_t *ops, lstack_t *nums) {
 long int infix_calc(char infix[]) {
     stack_t *stack = stack_new();
     lstack_t *nums = lstack_new();
-    int i, j = 0;
+    int i = 0, j = 0;
     char token;
 
-    for (i = 0; infix[i] != '\0'; i++) {
-        token = infix[i];
-        if (token == ' ') continue;
+    while ((token = infix[i]) != '\0') {
+        // token = infix[i];
+        if (token == ' ') { ++i; continue; };
+
+        if (isalpha((unsigned char)token)) {
+            fprintf(stderr, "Alpha not supported.\n");
+            exit(EXIT_FAILURE);
+        }
 
         if (isdigit((unsigned char)token)) {  /* parse multi-digit number */
             long int num = 0;
@@ -60,7 +65,6 @@ long int infix_calc(char infix[]) {
                 i++;
             }
             lstack_push(nums, num);
-            i--;
             continue;
         } else if (token == '(') {
             stack_push(stack, token);
@@ -77,6 +81,7 @@ long int infix_calc(char infix[]) {
             }
             stack_push(stack, token);
         }
+        ++i;
     }
 
     /* flush remaining operators */
